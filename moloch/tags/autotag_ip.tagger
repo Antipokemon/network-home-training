@@ -1,0 +1,50 @@
+# Network Information
+# Individual IPs
+192.168.30.2;tags=pihole_dns
+192.168.30.3;tags=media_box
+192.168.86.69;tags=desktop
+192.168.86.246;tags=welcome_display
+# 
+# Possible Shodan Scanners
+208.180.20.97;tags=shodan_scanner
+198.20.69.74;tags=shodan_scanner
+198.20.69.98;tags=shodan_scanner
+198.20.70.114;tags=shodan_scanner
+198.20.99.130;tags=shodan_scanner
+93.120.27.62;tags=shodan_scanner
+66.240.236.119;tags=shodan_scanner
+71.6.135.131;tags=shodan_scanner
+66.240.192.138;tags=shodan_scanner
+71.6.167.142;tags=shodan_scanner
+82.221.105.6;tags=shodan_scanner
+82.221.105.7;tags=shodan_scanner
+71.6.165.200;tags=shodan_scanner
+188.138.9.50;tags=shodan_scanner
+85.25.103.50;tags=shodan_scanner
+85.25.43.94;tags=shodan_scanner
+71.6.146.185;tags=shodan_scanner
+71.6.158.166;tags=shodan_scanner
+198.20.87.98;tags=shodan_scanner
+66.240.219.146;tags=shodan_scanner
+209.126.110.38;tags=shodan_scanner
+104.236.198.48;tags=shodan_scanner
+104.131.0.69;tags=shodan_scanner
+162.159.244.38;tags=shodan_scanner
+93.174.95.106;tags=shodan_scanner
+94.102.49.193;tags=shodan_scanner
+80.82.77.139;tags=shodan_scanner
+94.102.49.190;tags=shodan_scanner
+185.163.109.66;tags=shodan_scanner
+89.248.172.16;tags=shodan_scanner
+71.6.146.186;tags=shodan_scanner
+89.248.167.131;tags=shodan_scanner
+159.203.176.62;tags=shodan_scanner
+185.181.102.18;tags=shodan_scanner
+80.82.77.33;tags=shodan_scanner
+216.117.2.180;tags=shodan_scanner
+# Possible Project 25499 Scanners
+98.143.148.107;tags=shodan_scanner
+155.94.254.133;tags=shodan_scanner
+155.94.254.143;tags=shodan_scanner
+155.94.222.12;tags=shodan_scanner
+98.143.148.135;tags=shodan_scanner
