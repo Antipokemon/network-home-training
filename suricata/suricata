@@ -1,0 +1,10 @@
+/var/log/suricata/eve.json
+{
+  su root root
+  notifempty
+  maxsize 1M
+  copytruncate
+  hourly
+  rotate 4
+  compress
+}

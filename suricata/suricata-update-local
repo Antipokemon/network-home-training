@@ -1,0 +1,25 @@
+#!/bin/bash
+
+MISP_HOST=https://misp.ex.is
+MISP_KEY=HIom6m0ZzA6lHFQOfhhTVwrHnRyk3Fh6CcoGLqYR
+
+curl -s -L -H "Authorization: $MISP_KEY" -H "Content-type: application/json" -H "Accept: application/json" "$MISP_HOST/jobs/cache/suricata" > /dev/null
+/usr/bin/suricata-update update --enable-conf /var/lib/suricata/enable.conf --disable-conf /var/lib/suricata/disable.conf --modify-conf /var/lib/suricata/modify.conf --drop-conf /var/lib/suricata/drop.conf
+
+i=0
+GET_MISP=1
+
+while [ "$(curl -s -L -H "Authorization: $MISP_KEY" -H "Content-type: application/json" -H "Accept: application/json" "$MISP_HOST/jobs/getProgress/cache_suricata" | grep progress | cut -d'"' -f 4)" != "100%" ]; do
+  i=$((i+1))
+  sleep 1
+  if [ $i == 30 ]; then
+    echo "MISP rule generation timed out"
+    GET_MISP=0
+    break
+  fi
+done
+
+if [ "$GET_MISP" == "1" ]; then
+  curl -s -L -o /var/lib/suricata/rules/misp.rules -H "Authorization: $MISP_KEY" -H "Content-type: application/json" -H "Accept: application/json" "$MISP_HOST/events/downloadExport/suricata"
+  echo "Downloaded MISP rules"
+fi
