@@ -1,17 +1,6 @@
 version: '3.5'
 services:
 
-#  suricata:
-#    container_name: suricata
-#    privileged: true
-#    network_mode: host
-#    image: suricata:6.0.0
-#    command: "suricata -q 0"
-#    volumes:
-#    - "/data/suricata/rules:/var/lib/suricata/rules"
-#    - "/data/suricata/suricata.yaml:/etc/suricata/suricata.yaml"
-#    - "/data/suricata/logs:/var/log/suricata"
-
 
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
@@ -66,3 +55,15 @@ services:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
 #    links:
 #      - elastic:elasticsearch
+
+
+#  suricata:
+#    container_name: suricata
+#    privileged: true
+#    network_mode: host
+#    image: suricata:6.0.0
+#    command: "suricata -q 0"
+#    volumes:
+#    - "/data/suricata/rules:/var/lib/suricata/rules"
+#    - "/data/suricata/suricata.yaml:/etc/suricata/suricata.yaml"
+#    - "/data/suricata/logs:/var/log/suricata"
