@@ -1,0 +1,68 @@
+version: '3.5'
+services:
+
+#  suricata:
+#    container_name: suricata
+#    privileged: true
+#    network_mode: host
+#    image: suricata:6.0.0
+#    command: "suricata -q 0"
+#    volumes:
+#    - "/data/suricata/rules:/var/lib/suricata/rules"
+#    - "/data/suricata/suricata.yaml:/etc/suricata/suricata.yaml"
+#    - "/data/suricata/logs:/var/log/suricata"
+
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+    container_name: elastic
+    restart: always
+    privileged: true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - ./elastic/moloch-data:/usr/share/elasticsearch/data:rw
+
+
+  moloch:
+    image: moloch:latest
+    build: .
+    container_name: moloch
+    hostname: moloch
+#    network_mode: host
+    ports:
+      - 8005:8005
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    depends_on:
+      - elastic
+    volumes:
+      - ./pcap:/data/pcap/
+      - ./raw:/data/moloch/raw/
+      - ./config.ini:/data/moloch/etc/config.ini
+      - ./init.txt:/init.txt
+    cap_add:
+      - IPC_LOCK
+      - NET_RAW
+      - NET_ADMIN
+      - SYS_NICE
+    links:
+      - elastic:elasticsearch
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.8.1
+    container_name: kibana
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+#    links:
+#      - elastic:elasticsearch
