@@ -1,9 +1,6 @@
 # Network Information
 # Individual IPs
-192.168.30.2;tags=pihole_dns
-192.168.30.3;tags=media_box
-192.168.86.69;tags=desktop
-192.168.86.246;tags=welcome_display
+#
 # 
 # Possible Shodan Scanners
 208.180.20.97;tags=shodan_scanner
