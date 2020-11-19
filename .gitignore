@@ -1,0 +1,7 @@
+# Ignore elastic data
+/elastic/moloch-data/nodes
+
+# Ignore moloch pcap and logs
+/moloch/logs/*
+/moloch/raw/*
+/moloch/pcap/*

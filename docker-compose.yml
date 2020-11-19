@@ -1,60 +1,96 @@
 version: '3.5'
 services:
 
-
+  # This section is for starting elasticsearch
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+    # Calls the image:version of elasticsearch to use.
+    ## Since no build variable exists, pulls from docker hub if image not present.
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    # What to name the running container
     container_name: elastic
+    network_mode: host
+    # If the container crashes, always restart it
     restart: always
-    privileged: true
+    # privileged: true
+    # ulimit is the number of open file descriptors per process.
     ulimits:
+      # memlock option is used to set the maximum amount of locked-in-memory address space as given in kilobytes.
       memlock:
+        # Soft limit is the limit enforced by kernel.
         soft: -1
+        # Hard limit is the ceiling for the resource value for unprivilged processess
+        ## which can raise its soft limit only to this value.
         hard: -1
+    # Ports open host:container to interact with the container
     ports:
+      # elasticsearch API port
       - 9200:9200
+      # communication for nodes
       - 9300:9300
     environment:
+      # I forget ------
       - discovery.type=single-node
     volumes:
-      - ./elastic/moloch-data:/usr/share/elasticsearch/data:rw
+      # Mounts host:container volume to allow access/persistence to files running in the container.
+      - ./elastic/moloch-data:/usr/share/elasticsearch/data:rw # Node data for elasticsearch persistence.
 
-
+  # This section is for starting moloch
   moloch:
+    # Moloch image to use.
     image: moloch:latest
-    build: .
+    # If the image doesn't exist build from this location. "." is the local directory
+    build: ./moloch
+    # What to name the running container
     container_name: moloch
+    # Need a better answer ------
     hostname: moloch
-#    network_mode: host
+    # Used to connect container to the host for collecting off the wire
+    network_mode: host
     ports:
+      # Ports open host:container to interact with the container
       - 8005:8005
+    # ulimit is the number of open file descriptors per process.
     ulimits:
+      # memlock option is used to set the maximum amount of locked-in-memory address space as given in kilobytes.
       memlock:
+        # Soft limit is the limit enforced by kernel.
         soft: -1
+        # Hard limit is the ceiling for the resource value for unprivilged processess
+        ## which can raise its soft limit only to this value.
         hard: -1
+    # Waits to start moloch until elasticsearch is running
     depends_on:
       - elastic
     volumes:
-      - ./pcap:/data/pcap/
-      - ./raw:/data/moloch/raw/
-      - ./config.ini:/data/moloch/etc/config.ini
-      - ./init.txt:/init.txt
+      # Mounts host:container volume to allow access/persistence to files running in the container
+      - ./moloch/logs:/data/moloch/logs/ # log files related to moloch
+      - ./moloch/pcap:/data/pcap/ # pcap folder for ingesting new pcap
+      - ./moloch/raw:/data/moloch/raw/ # pcap folder for processed pcap - stored as sessions2 data
+      - ./moloch/config/config.ini:/data/moloch/etc/config.ini # Config used for moloch settings
+      - ./init.txt:/init.txt # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
+      ## 1 = leave alone, init if anything else.
+    # Add container capabilities - These may not be needed, but if use cases expand they may be.
+    ## They are used on our kit's config and have been carried over.
     cap_add:
-      - IPC_LOCK
-      - NET_RAW
-      - NET_ADMIN
-      - SYS_NICE
-    links:
-      - elastic:elasticsearch
+      - IPC_LOCK # Allows to lock shared memory segments and mlock/mlockall calls.
+      - NET_RAW # Allow use of RAW and PACKET sockets.
+      - NET_ADMIN # Allows interacting with network interface. ie - promiscuous mode.
+      - SYS_NICE # Allows the container to raise process nice values, set real-time scheduling policies, set CPU affinity, and other operations.
 
 
+  # This section is for starting kibana
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.8.1
+    # Calls the image:version of kibana to use. Make sure the version matches elasticsearch.
+    ## Since no build variable exists, pulls from docker hub if image not present.
+    image: docker.elastic.co/kibana/kibana:7.10.0
+    network_mode: host
+    # What to name the running container
     container_name: kibana
+    ports:
+      - 5601:5601
     volumes:
-      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-#    links:
-#      - elastic:elasticsearch
+      # Mounts host:container volume to allow access/persistence to files running in the container
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml # Kibana config file. Mostly for adv users
 
 
 #  suricata:

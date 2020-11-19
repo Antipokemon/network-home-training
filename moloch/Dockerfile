@@ -3,12 +3,13 @@ FROM centos:7
     # Dependencies
 RUN yum -y install libpng gcc-c++ bzip2 cronie vim && \
     # Install moloch - You can update this line to the latest build as needed
-    yum -y install https://s3.amazonaws.com/files.molo.ch/builds/centos-7/moloch-2.4.2-1.x86_64.rpm && \
+    yum -y install https://s3.amazonaws.com/files.molo.ch/builds/centos-7/moloch-2.7.0-1.x86_64.rpm && \
     ln -s /data/moloch/bin/node /usr/bin/node && \
     cd /data/moloch/viewer && \
     /data/moloch/bin/npm install fs-ext && \
     /data/moloch/bin/npm update && \
     /data/moloch/bin/npm rebuild && \
+    # Remove gcc-c++ so nothing else can be built in the container
     yum -y autoremove gcc-c++ && \
     yum -y autoremove && \
     yum clean all && \
