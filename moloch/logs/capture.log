@@ -1,0 +1,2 @@
+Nov 19 18:22:24 reader-tpacketv3.c:245 reader_tpacketv3_init(): Error setting PROMISC: No such device
+Nov 19 18:25:27 reader-tpacketv3.c:245 reader_tpacketv3_init(): Error setting PROMISC: No such device
