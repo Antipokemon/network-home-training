@@ -2,7 +2,8 @@
 /elastic/moloch-data/nodes
 
 # Ignore moloch pcap and logs
-/moloch/logs/*.log
+/moloch/logs/viewer.log
+/moloch/logs/capture.log
 /moloch/raw/*.pcap
 /moloch/pcap/*.pcap
 /moloch/pcap/*.pcapng
