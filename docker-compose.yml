@@ -32,7 +32,7 @@ services:
       - discovery.type=single-node
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container.
-      - ./elastic/moloch-data:/usr/share/elasticsearch/data:rw # Node data for elasticsearch persistence.
+      - ./elastic/moloch-data:/usr/share/elasticsearch/data:Z # Node data for elasticsearch persistence.
 
   # This section is for starting moloch
   moloch:
