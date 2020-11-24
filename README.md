@@ -76,7 +76,7 @@ Application Options:
 2. docker-compose documentation- https://docs.docker.com/compose/
 3. Arkime(Moloch) FAQ - https://arkime.com/faq
 4. Arkime Github - https://github.com/arkime/arkime
-5. WISE tagger - 
+5. WISE tagger - https://arkime.com/wise
 6. Kibana documentation - https://www.elastic.co/guide/en/kibana/current/index.html
 7. Elasticsearch documentation - https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
     a. Node description - https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
