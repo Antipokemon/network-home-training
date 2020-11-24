@@ -63,11 +63,11 @@ services:
       - elastic
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
-      - ./moloch/logs:/data/moloch/logs/ # log files related to moloch
-      - ./moloch/pcap:/data/pcap/ # pcap folder for ingesting new pcap
-      - ./moloch/raw:/data/moloch/raw/ # pcap folder for processed pcap - stored as sessions2 data
-      - ./moloch/config/config.ini:/data/moloch/etc/config.ini # Config used for moloch settings
-      - ./init.txt:/init.txt # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
+      - ./moloch/logs:/data/moloch/logs/:Z # log files related to moloch
+      - ./moloch/pcap:/data/pcap/:ro # pcap folder for ingesting new pcap
+      - ./moloch/raw:/data/moloch/raw/:rw # pcap folder for processed pcap - stored as sessions2 data
+      - ./moloch/config/config.ini:/data/moloch/etc/config.ini:Z # Config used for moloch settings
+      - ./init.txt:/init.txt:Z # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
       ## 1 = leave alone, init if anything else.
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
     ## They are used on our kit's config and have been carried over.
@@ -90,7 +90,7 @@ services:
       - 5601:5601
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
-      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml # Kibana config file. Mostly for adv users
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:Z # Kibana config file. Mostly for adv users
 
 
 #  suricata:
