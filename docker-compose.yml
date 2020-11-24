@@ -28,7 +28,8 @@ services:
       # communication for nodes
       - 9300:9300
     environment:
-      # I forget ------
+      # Sets elastic to run as only a single node. Only change this if you "think" you know what you are doing.
+      # https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html#single-node-discovery
       - discovery.type=single-node
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container.
@@ -43,7 +44,7 @@ services:
     # What to name the running container
     container_name: moloch
     # Need a better answer ------
-    hostname: moloch
+    #hostname: moloch
     # Used to connect container to the host for collecting off the wire
     network_mode: host
     ports:

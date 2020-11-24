@@ -72,13 +72,17 @@ Application Options:
 # Resources
 **Note**: This section is for reference material for those who may want to learn more about the tools used in this repo. Those interested in being kit SMEs should get more familiar with this documentation.
 
-docker documentation - https://docs.docker.com/reference/  
-docker-compose documentation- https://docs.docker.com/compose/  
-Arkime(Moloch) FAQ - https://arkime.com/faq  
-Arkime Github - https://github.com/arkime/arkime  
-Kibana documentation - https://www.elastic.co/guide/en/kibana/current/index.html  
-Elasticsearch documentation - https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html  
-Suricata documentation - https://suricata.readthedocs.io/en/suricata-6.0.0/
+1. docker documentation - https://docs.docker.com/reference/
+2. docker-compose documentation- https://docs.docker.com/compose/
+3. Arkime(Moloch) FAQ - https://arkime.com/faq
+4. Arkime Github - https://github.com/arkime/arkime
+5. WISE tagger - 
+6. Kibana documentation - https://www.elastic.co/guide/en/kibana/current/index.html
+7. Elasticsearch documentation - https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+    a. Node description - https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
+    b. Shard description - https://www.elastic.co/guide/en/elasticsearch/guide/2.x/_add_an_index.html
+    c. Index description - https://www.elastic.co/blog/what-is-an-elasticsearch-index
+8. Suricata documentation - https://suricata.readthedocs.io/en/suricata-6.0.0/
 
 
 # Future:
