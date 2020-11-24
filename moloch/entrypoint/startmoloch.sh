@@ -4,11 +4,11 @@ value=$(cat /init.txt)
 
 # wait for Elasticsearch
 echo "Giving ES time to start..."
-sleep 10
+sleep 20
 
 if (($value!=1)); then
   # intialize moloch
-  echo INIT | /data/moloch/db/db.pl http://elasticsearch:9200 init
+  echo INIT | /data/moloch/db/db.pl http://localhost:9200 init
   /data/moloch/bin/moloch_add_user.sh admin "Admin User" password --admin
   echo "1" > /init.txt
 fi
