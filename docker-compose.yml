@@ -93,14 +93,16 @@ services:
       # Mounts host:container volume to allow access/persistence to files running in the container
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:Z # Kibana config file. Mostly for adv users
 
-
+  # This section is for starting suricata
 #  suricata:
+    # Calls the image:version of suricata to use.
+    ## Since no build variable exists, pulls from docker hub if image not present.
 #    container_name: suricata
 #    privileged: true
 #    network_mode: host
 #    image: suricata:6.0.0
 #    command: "suricata -q 0"
 #    volumes:
-#    - "/data/suricata/rules:/var/lib/suricata/rules"
-#    - "/data/suricata/suricata.yaml:/etc/suricata/suricata.yaml"
-#    - "/data/suricata/logs:/var/log/suricata"
+#    - "./suricata/rules:/var/lib/suricata/rules"
+#    - "./suricata/suricata.yaml:/etc/suricata/suricata.yaml"
+#    - "./suricata/logs:/var/log/suricata"
