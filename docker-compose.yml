@@ -12,7 +12,6 @@ services:
     network_mode: host
     # If the container crashes, always restart it
     restart: always
-    # privileged: true
     # ulimit is the number of open file descriptors per process.
     ulimits:
       # memlock option is used to set the maximum amount of locked-in-memory address space as given in kilobytes.
