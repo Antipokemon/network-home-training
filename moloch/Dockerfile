@@ -26,6 +26,9 @@ RUN yum -y install libpng gcc-c++ bzip2 cronie vim && \
     # Create file to test if it has been started before
     echo "0" > /init.txt
 
+RUN tar -ztf /tmp/GeoLite2-Country.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-Country.tar.gz X >> /data/moloch/etc/GeoLite2-Country.mmdb && \
+    tar -ztf /tmp/GeoLite2-ASN.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-ASN.tar.gz X >> /data/moloch/etc/GeoLite2-ASN.mmdb && \
+    rm -rf /tmp/GeoLite2-*
 
 # Copy lua script parsers
 COPY lua/dcerpc.lua /data/moloch/lua/dcerpc.lua
