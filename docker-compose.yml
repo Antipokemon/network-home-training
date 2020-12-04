@@ -8,6 +8,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
     # What to name the running container
     container_name: elastic
+    # Used to connect container to the host network
     network_mode: host
     # If the container crashes, always restart it
     restart: always
@@ -18,7 +19,7 @@ services:
       memlock:
         # Soft limit is the limit enforced by kernel.
         soft: -1
-        # Hard limit is the ceiling for the resource value for unprivilged processess
+        # Hard limit is the ceiling for the resource value for unprivileged processes
         ## which can raise its soft limit only to this value.
         hard: -1
     # Ports open host:container to interact with the container
@@ -43,10 +44,9 @@ services:
     build: ./moloch
     # What to name the running container
     container_name: moloch
-    # Need a better answer ------
-    #hostname: moloch
     # Used to connect container to the host for collecting off the wire
     network_mode: host
+    # Ports open host:container to interact with the container
     ports:
       # Ports open host:container to interact with the container
       - 8005:8005
@@ -84,10 +84,13 @@ services:
     # Calls the image:version of kibana to use. Make sure the version matches elasticsearch.
     ## Since no build variable exists, pulls from docker hub if image not present.
     image: docker.elastic.co/kibana/kibana:7.10.0
-    network_mode: host
     # What to name the running container
     container_name: kibana
+    # Used to connect container to the host network
+    network_mode: host
+    # Ports open host:container to interact with the container
     ports:
+      # Ports open host:container to interact with the container
       - 5601:5601
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
