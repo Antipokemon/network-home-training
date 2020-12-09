@@ -72,6 +72,7 @@ services:
       - ./init.txt:/init.txt:Z # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
       - ./moloch/capture.txt:/capture.txt # Used to determine whether capture should start listening off the wire.
       - ./suricata/logs:/data/moloch/etc/suricata:z # Used to share alerts from suricata with moloch.
+      - ./moloch/tags:/data/moloch/tags:Z
       ## 1 = leave alone, init if anything else.
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
     ## They are used on our kit's config and have been carried over.

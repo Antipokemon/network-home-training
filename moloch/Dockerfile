@@ -39,6 +39,9 @@ COPY lua/entropy.lua /data/moloch/lua/entropy.lua
 COPY wise/source.majestic.js /data/moloch/wiseService/source.majestic.js
 COPY wise/wiseService.ini /data/moloch/etc/wiseService.ini
 
+# Create tags folder
+RUN mkdir /data/moloch/tags/
+
 # Copy moloch's config file
 COPY config/config.ini /data/moloch/etc/config.ini
 
