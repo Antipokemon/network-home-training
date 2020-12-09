@@ -70,6 +70,7 @@ services:
       - ./moloch/raw:/data/moloch/raw/:rw # pcap folder for processed pcap - stored as sessions2 data
       - ./moloch/config/config.ini:/data/moloch/etc/config.ini:Z # Config used for moloch settings
       - ./init.txt:/init.txt:Z # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
+      - ./moloch/capture.txt:/capture.txt # Used to determine whether capture should start listening off the wire.
       - ./suricata/logs:/data/moloch/etc/suricata:z # Used to share alerts from suricata with moloch.
       ## 1 = leave alone, init if anything else.
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
