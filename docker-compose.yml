@@ -96,15 +96,18 @@ services:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:Z # Kibana config file. Mostly for adv users
 
   # This section is for starting suricata
-#  suricata:
+  suricata:
     # Calls the image:version of suricata to use.
     ## Since no build variable exists, pulls from docker hub if image not present.
-#    container_name: suricata
-#    privileged: true
-#    network_mode: host
-#    image: suricata:6.0.0
-#    command: "suricata -q 0"
-#    volumes:
-#    - "./suricata/rules:/var/lib/suricata/rules"
-#    - "./suricata/suricata.yaml:/etc/suricata/suricata.yaml"
-#    - "./suricata/logs:/var/log/suricata"
+    image: suricata:6.0.0
+    build: ./suricata
+    container_name: suricata
+    privileged: true
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    volumes:
+      - ./suricata/rules:/etc/suricata/rules:z
+      - ./suricata/etc/suricata.yaml/suricata.yaml:/etc/suricata/suricata.yaml:Z
+      - ./suricata/logs:/var/log/suricata:Z

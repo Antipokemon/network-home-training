@@ -22,9 +22,6 @@ RUN yum -y install logrotate && mv /etc/cron.daily/logrotate /etc/cron.hourly/lo
 #COPY suricata.yaml /etc/suricata.yaml
 COPY suricata /etc/logrotate.d/suricata
 COPY suricata-update-local /usr/local/bin/suricata-update-local
-COPY root /var/spool/cron/crontabs/root
-COPY icdm_check.sh /usr/bin/icdm_check
-RUN chmod +x /usr/bin/icdm_check && chmod 0644 /etc/logrotate.d/suricata
 
 RUN suricata-update update-sources && suricata-update enable-source et/open && suricata-update enable-source oisf/trafficid && suricata-update enable-source sslbl/ja3-fingerprints && suricata-update enable-source ptresearch/attackdetection && suricata-update enable-source sslbl/ssl-fp-blacklist && suricata-update enable-source tgreen/hunting && suricata-update enable-source etnetera/aggressive && /bin/bash /usr/local/bin/suricata-update-local
 
