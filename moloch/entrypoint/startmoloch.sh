@@ -5,7 +5,7 @@ capture=$(cat /capture.txt)
 
 # wait for Elasticsearch
 echo "Giving ES time to start..."
-sleep 10
+sleep 15
 
 if (($init==0))
 then
@@ -15,15 +15,15 @@ then
   echo "1" > /init.txt
 fi
 
-# Start Viewer
-echo "Starting moloch-viewer"
-cd /data/moloch/viewer
-/bin/bash -c "/data/moloch/bin/node viewer.js -h"
-/bin/bash -c "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini >> /data/moloch/logs/viewer.log 2>&1"
-
 if (($capture==TRUE))
 then
   #Start Capture
   echo "Starting moloch-capture on default interface."
   /bin/bash -c "/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 fi
+
+# Start Viewer
+echo "Starting moloch-viewer"
+cd /data/moloch/viewer
+/bin/bash -c "/data/moloch/bin/node viewer.js -h"
+/bin/bash -c "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini >> /data/moloch/logs/viewer.log 2>&1"
