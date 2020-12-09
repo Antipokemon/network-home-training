@@ -31,6 +31,7 @@ services:
       # Sets elastic to run as only a single node. Only change this if you "think" you know what you are doing.
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html#single-node-discovery
       - discovery.type=single-node
+    # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container.
       - ./elastic/moloch-data:/usr/share/elasticsearch/data:Z # Node data for elasticsearch persistence.
@@ -61,6 +62,7 @@ services:
     # Waits to start moloch until elasticsearch is running
     depends_on:
       - elastic
+    # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
       - ./moloch/logs:/data/moloch/logs/:Z # log files related to moloch
@@ -68,6 +70,7 @@ services:
       - ./moloch/raw:/data/moloch/raw/:rw # pcap folder for processed pcap - stored as sessions2 data
       - ./moloch/config/config.ini:/data/moloch/etc/config.ini:Z # Config used for moloch settings
       - ./init.txt:/init.txt:Z # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
+      - ./suricata/logs:/data/moloch/etc/suricata:z # Used to share alerts from suricata with moloch.
       ## 1 = leave alone, init if anything else.
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
     ## They are used on our kit's config and have been carried over.
@@ -91,6 +94,7 @@ services:
     ports:
       # Ports open host:container to interact with the container
       - 5601:5601
+    # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:Z # Kibana config file. Mostly for adv users
@@ -98,16 +102,20 @@ services:
   # This section is for starting suricata
   suricata:
     # Calls the image:version of suricata to use.
-    ## Since no build variable exists, pulls from docker hub if image not present.
     image: suricata:6.0.0
+     # If the image doesn't exist build from this location. "." is the local directory
     build: ./suricata
+    # What to name the running container
     container_name: suricata
-    privileged: true
+    # privileged: true
+    # Used to connect container to the host for collecting off the wire
     network_mode: host
+    # Add container capabilities - These may not be needed, but if use cases expand they may be.
     cap_add:
-      - NET_ADMIN
-      - SYS_NICE
+      - NET_ADMIN # Allows interacting with network interface. ie - promiscuous mode.
+      - SYS_NICE # Allows the container to raise process nice values, set real-time scheduling policies, set CPU affinity, and other operations.
+      # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
-      - ./suricata/rules:/etc/suricata/rules:z
-      - ./suricata/etc/suricata.yaml/suricata.yaml:/etc/suricata/suricata.yaml:Z
-      - ./suricata/logs:/var/log/suricata:Z
+      - ./suricata/rules:/etc/suricata/rules:z # Rules files.
+      - ./suricata/etc/suricata.yaml/suricata.yaml:/etc/suricata/suricata.yaml:Z # Suricata.yaml to edit config
+      - ./suricata/logs:/var/log/suricata:z # suricata logs for alerts and debug

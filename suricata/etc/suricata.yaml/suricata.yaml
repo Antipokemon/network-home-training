@@ -74,7 +74,8 @@ outputs:
   - eve-log:
       enabled: yes
       filetype: regular #regular|syslog|unix_dgram|unix_stream|redis
-      filename: eve-%Y-%m-%d-%H-%M.json
+      filename: eve.json
+      #filename: eve-%Y-%m-%d-%H-%M.json
       #prefix: "@cee: " # prefix to prepend to each log entry
       # the following are valid when type: syslog above
       #identity: "suricata"
