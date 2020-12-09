@@ -5,7 +5,7 @@ capture=$(cat /capture.txt)
 
 # wait for Elasticsearch
 echo "Giving ES time to start..."
-sleep 15
+sleep 20
 
 if (($init==0))
 then
