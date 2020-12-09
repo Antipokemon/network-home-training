@@ -9,5 +9,5 @@
 /moloch/pcap/*.pcapng
 
 # Ignore suricata logs
-# /suricata/logs/eve*.json
-# /suricata/logs/suricata.log
+/suricata/logs/eve.json
+/suricata/logs/suricata.log

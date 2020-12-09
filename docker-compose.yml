@@ -107,7 +107,6 @@ services:
     build: ./suricata
     # What to name the running container
     container_name: suricata
-    # privileged: true
     # Used to connect container to the host for collecting off the wire
     network_mode: host
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
