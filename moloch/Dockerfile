@@ -3,7 +3,7 @@ FROM centos:7
     # Dependencies
 RUN yum -y install libpng gcc-c++ bzip2 cronie vim && \
     # Install moloch - You can update this line to the latest build as needed
-    yum -y install https://s3.amazonaws.com/files.molo.ch/builds/centos-7/moloch-2.7.0-1.x86_64.rpm && \
+    yum -y install https://s3.amazonaws.com/files.molo.ch/builds/centos-7/moloch-2.7.1-1.x86_64.rpm && \
     ln -s /data/moloch/bin/node /usr/bin/node && \
     cd /data/moloch/viewer && \
     /data/moloch/bin/npm install fs-ext && \
@@ -49,8 +49,7 @@ COPY config/config.ini /data/moloch/etc/config.ini
 COPY entrypoint/startmoloch.sh /data/startmoloch.sh
 RUN chmod +x /data/startmoloch.sh
 
-RUN sed -i -e '7820i      session.fileId = [seq];' /data/moloch/viewer/viewer.js
-
+# RUN sed -i -e '7820i      session.fileId = [seq];' /data/moloch/viewer/viewer.js
 
 WORKDIR /data/moloch/viewer
 CMD /bin/bash

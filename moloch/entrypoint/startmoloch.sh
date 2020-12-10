@@ -19,8 +19,12 @@ if (($capture==TRUE))
 then
   #Start Capture
   echo "Starting moloch-capture on default interface."
-  /bin/bash -c "/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
+  /bin/bash -c "/data/moloch/bin/moloch-capture --debug -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 fi
+
+# Start WISE
+echo "Starting WISE"
+/bin/bash -c 'cd /data/moloch/wiseService; /data/moloch/bin/node wiseService.js &'
 
 # Start Viewer
 echo "Starting moloch-viewer"
