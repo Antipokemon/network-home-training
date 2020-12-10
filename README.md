@@ -6,6 +6,7 @@
 2. **cd network-home-training**
 3. If needed, **sudo dnf install docker-ce docker-compose -y**
 4. Add your user to docker group **sudo usermod -aG docker $USER**
+    1. For your user to be added, log out and log back in
 5. **docker-compose up -d**
 
 # Running pcap through Arkime (Moloch)
