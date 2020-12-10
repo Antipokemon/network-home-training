@@ -24,8 +24,11 @@ RUN yum -y install libpng gcc-c++ bzip2 cronie vim && \
     echo '    +arrayList(session.smb, "opcode", "OpCode", "smb.opcode")' >> /data/moloch/parsers/smb.detail.jade && \
     echo '    +arrayList(session.smb, "cmd", "Command", "smb.cmd")' >> /data/moloch/parsers/smb.detail.jade && \
     # Create file to test if it has been started before
-    echo "0" > /init.txt
+    echo "0" > /init.txt && \
+    # Create tags folder
+    mkdir /data/moloch/tags/
 
+# Put maxmind databases in their proper locations
 RUN tar -ztf /tmp/GeoLite2-Country.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-Country.tar.gz X >> /data/moloch/etc/GeoLite2-Country.mmdb && \
     tar -ztf /tmp/GeoLite2-ASN.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-ASN.tar.gz X >> /data/moloch/etc/GeoLite2-ASN.mmdb && \
     rm -rf /tmp/GeoLite2-*
@@ -38,9 +41,6 @@ COPY lua/entropy.lua /data/moloch/lua/entropy.lua
 # Copy wise dependencies
 COPY wise/source.majestic.js /data/moloch/wiseService/source.majestic.js
 COPY wise/wiseService.ini /data/moloch/etc/wiseService.ini
-
-# Create tags folder
-RUN mkdir /data/moloch/tags/
 
 # Copy moloch's config file
 COPY config/config.ini /data/moloch/etc/config.ini
