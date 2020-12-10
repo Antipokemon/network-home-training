@@ -49,8 +49,6 @@ COPY config/config.ini /data/moloch/etc/config.ini
 COPY entrypoint/startmoloch.sh /data/startmoloch.sh
 RUN chmod +x /data/startmoloch.sh
 
-# RUN sed -i -e '7820i      session.fileId = [seq];' /data/moloch/viewer/viewer.js
-
 WORKDIR /data/moloch/viewer
 CMD /bin/bash
 

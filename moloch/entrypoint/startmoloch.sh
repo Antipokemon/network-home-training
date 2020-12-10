@@ -24,10 +24,10 @@ fi
 
 # Start WISE
 echo "Starting WISE"
+# This command seems to need to be run from the directory itself. During testing it wouldn't run properly unless you cd to the directory.
 /bin/bash -c 'cd /data/moloch/wiseService; /data/moloch/bin/node wiseService.js &'
 
 # Start Viewer
 echo "Starting moloch-viewer"
 cd /data/moloch/viewer
-/bin/bash -c "/data/moloch/bin/node viewer.js -h"
 /bin/bash -c "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini >> /data/moloch/logs/viewer.log 2>&1"
