@@ -581,7 +581,7 @@ logging:
 
 # Linux high speed capture support
 af-packet:
-  - interface: enp1s0
+  - interface: eno1
     # Number of receive threads. "auto" uses the number of cores
     #threads: 
     # Default clusterid. AF_PACKET will load balance packets based on flow.
@@ -671,7 +671,7 @@ af-packet:
 
 # Cross platform libpcap capture support
 pcap:
-  - interface: enp1s0
+  - interface: eno1
     # On Linux, pcap will try to use mmaped capture and will use buffer-size
     # as total of memory used by the ring. So set this to something bigger
     # than 1% of your bandwidth.
@@ -1640,48 +1640,48 @@ capture:
 # You can find more information at https://github.com/luigirizzo/netmap
 #
 netmap:
-   # To specify OS endpoint add plus sign at the end (e.g. "eth0+")
- - interface: enp1s0
-   # Number of receive threads. "auto" uses number of RSS queues on interface.
-   #threads: auto
-   # You can use the following variables to activate netmap tap or IPS mode.
-   # If copy-mode is set to ips or tap, the traffic coming to the current
-   # interface will be copied to the copy-iface interface. If 'tap' is set, the
-   # copy is complete. If 'ips' is set, the packet matching a 'drop' action
-   # will not be copied.
-   # To specify the OS as the copy-iface (so the OS can route packets, or forward
-   # to a service running on the same machine) add a plus sign at the end
-   # (e.g. "copy-iface: eth0+"). Don't forget to set up a symmetrical eth0+ -> eth0
-   # for return packets. Hardware checksumming must be *off* on the interface if
-   # using an OS endpoint (e.g. 'ifconfig eth0 -rxcsum -txcsum -rxcsum6 -txcsum6' for FreeBSD
-   # or 'ethtool -K eth0 tx off rx off' for Linux).
-   #copy-mode: tap
-   #copy-iface: eth3
-   # Set to yes to disable promiscuous mode
-   # disable-promisc: no
-   # Choose checksum verification mode for the interface. At the moment
-   # of the capture, some packets may be with an invalid checksum due to
-   # offloading to the network card of the checksum computation.
-   # Possible values are:
-   #  - yes: checksum validation is forced
-   #  - no: checksum validation is disabled
-   #  - auto: Suricata uses a statistical approach to detect when
-   #  checksum off-loading is used.
-   # Warning: 'checksum-validation' must be set to yes to have any validation
-   #checksum-checks: auto
-   # BPF filter to apply to this interface. The pcap filter syntax apply here.
-   #bpf-filter: port 80 or udp
- #- interface: eth3
-   #threads: auto
-   #copy-mode: tap
-   #copy-iface: eth2
-   # Put default values here
- - interface: default
+    # To specify OS endpoint add plus sign at the end (e.g. "eth0+")
+  - interface: eno1
+    # Number of receive threads. "auto" uses number of RSS queues on interface.
+    #threads: auto
+    # You can use the following variables to activate netmap tap or IPS mode.
+    # If copy-mode is set to ips or tap, the traffic coming to the current
+    # interface will be copied to the copy-iface interface. If 'tap' is set, the
+    # copy is complete. If 'ips' is set, the packet matching a 'drop' action
+    # will not be copied.
+    # To specify the OS as the copy-iface (so the OS can route packets, or forward
+    # to a service running on the same machine) add a plus sign at the end
+    # (e.g. "copy-iface: eth0+"). Don't forget to set up a symmetrical eth0+ -> eth0
+    # for return packets. Hardware checksumming must be *off* on the interface if
+    # using an OS endpoint (e.g. 'ifconfig eth0 -rxcsum -txcsum -rxcsum6 -txcsum6' for FreeBSD
+    # or 'ethtool -K eth0 tx off rx off' for Linux).
+    #copy-mode: tap
+    #copy-iface: eth3
+    # Set to yes to disable promiscuous mode
+    # disable-promisc: no
+    # Choose checksum verification mode for the interface. At the moment
+    # of the capture, some packets may be with an invalid checksum due to
+    # offloading to the network card of the checksum computation.
+    # Possible values are:
+    #  - yes: checksum validation is forced
+    #  - no: checksum validation is disabled
+    #  - auto: Suricata uses a statistical approach to detect when
+    #  checksum off-loading is used.
+    # Warning: 'checksum-validation' must be set to yes to have any validation
+    #checksum-checks: auto
+    # BPF filter to apply to this interface. The pcap filter syntax apply here.
+    #bpf-filter: port 80 or udp
+  #- interface: eth3
+    #threads: auto
+    #copy-mode: tap
+    #copy-iface: eth2
+    # Put default values here
+  - interface: default
 
 # PF_RING configuration. for use with native PF_RING support
 # for more info see http://www.ntop.org/products/pf_ring/
 pfring:
-  - interface: enp1s0
+  - interface: eno1
     # Number of receive threads (>1 will enable experimental flow pinned
     # runmode)
     threads: 1
