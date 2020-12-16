@@ -1,13 +1,14 @@
 # Instructions
 **Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
 1. Go to directory you want to store your docker data in:
-    1. If needed, **sudo dnf install git -y**
+    1. If git is needed: **sudo dnf install git -y**
     2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
 2. **cd network-home-training**
+3. chmod the raw pcap directory: **chmod 777 moloch/raw**
 3. If needed, **sudo dnf install docker-ce docker-compose -y**
-4. Add your user to docker group **sudo usermod -aG docker $USER**
-    1. For your user to be added, log out and log back in
-5. **docker-compose up -d**
+4. Add your user to docker group: **sudo usermod -aG docker $USER**
+5. Login to the new group: **newgrp docker**
+6. **docker-compose up -d**
 
 # Running pcap through Arkime (Moloch)
 **Note**: It is recommended by the Arkime developers to only run .pcap files through Arkime. Other file types may work, but are not supported.
@@ -69,6 +70,16 @@ Application Options:
   --insecure         insecure https calls
   --nolockpcap       Don't lock offline pcap files (ie., allow deletion)
 ```
+
+# If running from your personal computer
+Since this was designed around the MIP, you will need to change the interface the containers are using.
+### Moloch:
+1. vim moloch/etc/config.ini
+    a. change line 60 to your interface
+
+### Suricata:
+1. vim suricata/etc/suricata.yaml/suricata.yaml
+    a. change line 584, 674, 1644, 1684 to your interface
 
 # Resources
 **Note**: This section is for reference material for those who may want to learn more about the tools used in this repo. Those interested in being kit SMEs should get more familiar with this documentation.
