@@ -1,9 +1,11 @@
 FROM centos:7
 
     # Dependencies
-RUN yum -y install libpng gcc-c++ bzip2 cronie vim && \
-    # Install moloch - You can update this line to the latest build as needed
-    yum -y install https://s3.amazonaws.com/files.molo.ch/builds/centos-7/moloch-2.7.1-1.x86_64.rpm && \
+RUN yum -y install libpng gcc-c++ bzip2 cronie vim python3 python3-pip && pip3 install xq && \
+    # Find lastest version of moloch
+    export VERSION=$(curl https://s3.amazonaws.com/files.molo.ch/ | xq . | grep Key | awk -F \<Key\> '{print $2}' | awk -F \</Key\> '{print $1}' | grep -v nightly | grep builds/centos-7/moloch | tail -1) && \
+    # Install moloch
+    yum -y install https://s3.amazonaws.com/files.molo.ch/$VERSION && \
     ln -s /data/moloch/bin/node /usr/bin/node && \
     cd /data/moloch/viewer && \
     /data/moloch/bin/npm install fs-ext && \

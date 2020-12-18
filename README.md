@@ -98,5 +98,6 @@ Since this was designed around the MIP, you will need to change the interface th
 
 
 # Future:
-podman  
 podman-compose
+chmod 777 elastic/elastic-data
+chmod 777 moloch/raw
