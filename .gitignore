@@ -1,5 +1,5 @@
 # Ignore elastic data
-/elastic/moloch-data/nodes
+/elastic/moloch-data/nodes/0
 
 # Ignore moloch pcap and logs
 /moloch/logs/viewer.log

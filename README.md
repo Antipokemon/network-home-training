@@ -1,4 +1,4 @@
-# Instructions
+# **Instructions**
 **Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
 1. Go to directory you want to store your docker data in:
     1. If git is needed: **sudo dnf install git -y**
@@ -8,35 +8,46 @@
 3. If needed, **sudo dnf install docker-ce docker-compose -y**
 4. Add your user to docker group: **sudo usermod -aG docker $USER**
 5. Login to the new group: **newgrp docker**
-6. **docker-compose up -d**
+6. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
+7. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
+8. **docker-compose up -d**
 
-# Running pcap through Arkime (Moloch)
-**Note**: It is recommended by the Arkime developers to only run .pcap files through Arkime. Other file types may work, but are not supported.
-## Outside the container
-**Note**: If in doubt, add the "--dryrun" flag to your moloch-capture command to test the run.
-1. To run capture on **ALL** pcap within the pcap folder:
-    1. **docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"**
-2. To run capture on an individual pcap file in the pcap folder:
-    1. **docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -r /data/pcap/<name of file.pcap> --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"**
-3. If you are unsure whether a pcap file has already been parsed add the -s option to skip already processed files.
-    1. **Example**: docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -s -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
+# **Fedora 33 MIP Image Instructions:**
+## Install Docker
+https://docs.docker.com/engine/install/fedora/
+1. **sudo dnf -y install dnf-plugins-core**
+2. **sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo**
+3. **sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose**
+4. start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
+5. Add your user to docker group: **sudo usermod -aG docker $USER**
+6. Login to the new group: **newgrp docker**
 
-**Note**: The " >> /data/moloch/logs/capture.log 2>&1 &" portion of the command is to run the command in the background and send all log messages to capture.log
+## Run
+1. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
+2. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
+3. **docker-compose up -d**
 
-## Inside the container
-**Note**: If in doubt, add the "--dryrun" flag to your moloch-capture command to test the run.
-1. **docker exec -it moloch /bin/bash**
-2. To run capture on **ALL** pcap within the pcap folder:
-    1. **data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &**
-3. To run capture on an individual pcap file in the pcap folder:
-    1. **data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -r /data/pcap/<name of file.pcap> --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &**
-4. If you are unsure whether a pcap file has already been parsed add the -s option to skip already processed files.
-    1. **Example**: docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -s -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
+# **Running From Your Personal Computer**
+Since this was designed around the MIP, you will need to change the interface the containers are using.
+## Moloch:
+1. **vim moloch/etc/config.ini**
+    1. Change line 60 to your interface
 
-**Note**: The " >> /data/moloch/logs/capture.log 2>&1 &" portion of the command is to run the command in the background and send all log messages to capture.log
+## Suricata:
+1. **vim suricata/etc/suricata.yaml/suricata.yaml**
+    1. change lines 584, 674, 1644, 1684 to your interface
 
+# **View Running Services**
+1. **Arkime** - localhost:8005
+    1. User: Admin
+    2. Password: password
+2. **Kibana** - localhost:5601  
+    1. You will likely need to create an index pattern.
+    2. Name it sessions2-*
+    3. Time field - timestamp
+3. **Elastic** - localhost:9200
 
-# ****Still working on a way to parse pcap through Arkime and Suricata simultaneously**
+# **Running pcap through Arkime (Moloch)**
 ```
 moloch-capture -h
 Usage:
@@ -70,18 +81,81 @@ Application Options:
   --insecure         insecure https calls
   --nolockpcap       Don't lock offline pcap files (ie., allow deletion)
 ```
+**Note**: It is recommended by the Arkime developers to only run .pcap files through Arkime. Other file types may work, but are not supported.
+## Outside the container
+**Note**: If in doubt, add the "--dryrun" flag to your moloch-capture command to test the run.
+1. To run capture on **ALL** pcap within the pcap folder:
+    1. **docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"**
+2. To run capture on an individual pcap file in the pcap folder:
+    1. **docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -r /data/pcap/<name of file.pcap> --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"**
+3. If you are unsure whether a pcap file has already been parsed add the -s option to skip already processed files.
+    1. **Example**: docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -s -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 
-# If running from your personal computer
-Since this was designed around the MIP, you will need to change the interface the containers are using.
-### Moloch:
-1. vim moloch/etc/config.ini
-    a. change line 60 to your interface
+**Note**: The " >> /data/moloch/logs/capture.log 2>&1 &" portion of the command is to run the command in the background and send all log messages to capture.log
 
-### Suricata:
-1. vim suricata/etc/suricata.yaml/suricata.yaml
-    a. change line 584, 674, 1644, 1684 to your interface
+## Inside the container
+**Note**: If in doubt, add the "--dryrun" flag to your moloch-capture command to test the run.
+1. **docker exec -it moloch /bin/bash**
+2. To run capture on **ALL** pcap within the pcap folder:
+    1. **data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &**
+3. To run capture on an individual pcap file in the pcap folder:
+    1. **data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -r /data/pcap/<name of file.pcap> --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &**
+4. If you are unsure whether a pcap file has already been parsed add the -s option to skip already processed files.
+    1. **Example**: docker exec "data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini -s -R /data/pcap --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 
-# Resources
+**Note**: The " >> /data/moloch/logs/capture.log 2>&1 &" portion of the command is to run the command in the background and sends all log messages to capture.log
+
+# Modifying Things
+## Moloch
+**WISE Tags** - https://arkime.com/wise
+
+To add more custom WISE tags add the file to moloch/tags then add it to moloch/wise/wiseService.ini
+
+
+Create a [file:UNIQUENAME] section to configure
+|Setting   |	Default  |	Description|
+|----------|-------------|--------------|
+|file      |   REQUIRED  |	The file to load
+|tags      |   REQUIRED  |	Comma separated list of tags to set for matches
+|type      |   REQUIRED  |	The type of data in the file, such as ip,domain,md5,ja3,email, or something defined in [wise-types]
+|format    |   csv       |	csv,Tagger Format,json - The format of data file
+|keyColumn |   0         |	For json formatted files, which json field is the key
+|column    |   0         |	For csv formatted files, which column is the data
+
+When adding it to the wiseService.ini, remember that you need to specify the directory inside the container. This is setup to be /data/moloch/tags as shown in the below example.
+
+```
+[file:autotag_ip]
+file=/data/moloch/tags/autotag_ip.tagger
+type=ip
+format=tagger
+```
+There are also other Third Party sources available to use with WISE, but need a key. Read the docs at the above link to figure out how.
+
+**Lua Parsers** - https://confluence.di2e.net/display/CYH836/Moloch+-+LUA+Scripting
+
+As this is covered elsewhere, the only added info is to place the lua files in the moloch/lua directory
+## Suricata
+Add more rules - https://suricata.readthedocs.io/en/suricata-6.0.0/configuration/suricata-yaml.html#rules
+
+Go down to line 1804 in suricata/etc/suricata.yaml/suricata.yaml and add the files to the list of current rules files.
+```
+default-rule-path: /etc/suricata/rules
+rule-files:
+ - misp_admin.rules
+ - domain.rules
+ - Added_rules_file.rules
+```
+
+**Edit the config** - https://suricata.readthedocs.io/en/suricata-6.0.0/configuration/suricata-yaml.html#
+
+As there are many options, this will not be covered. Just know that options like enabling JA3s, parsing smtp, smb, nfs, krb5, etc are all options that can be turned off or on.
+
+The suricata.yaml is a large file and, if intersted in learning the capabilities suricata has, reading the documentation provided by suricata is the best option.
+
+Lastly, Mr. Dietrich created a suricata training. It may help to seek that out.
+
+# **Resources**
 **Note**: This section is for reference material for those who may want to learn more about the tools used in this repo. Those interested in being kit SMEs should get more familiar with this documentation.
 
 1. docker documentation - https://docs.docker.com/reference/
@@ -91,13 +165,7 @@ Since this was designed around the MIP, you will need to change the interface th
 5. WISE tagger - https://arkime.com/wise
 6. Kibana documentation - https://www.elastic.co/guide/en/kibana/current/index.html
 7. Elasticsearch documentation - https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-    a. Node description - https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
-    b. Shard description - https://www.elastic.co/guide/en/elasticsearch/guide/2.x/_add_an_index.html
-    c. Index description - https://www.elastic.co/blog/what-is-an-elasticsearch-index
+    1. Node description - https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html
+    2. Shard description - https://www.elastic.co/guide/en/elasticsearch/guide/2.x/_add_an_index.html
+    3. Index description - https://www.elastic.co/blog/what-is-an-elasticsearch-index
 8. Suricata documentation - https://suricata.readthedocs.io/en/suricata-6.0.0/
-
-
-# Future:
-podman-compose
-chmod 777 elastic/elastic-data
-chmod 777 moloch/raw
