@@ -106,7 +106,11 @@ Application Options:
 **Note**: The " >> /data/moloch/logs/capture.log 2>&1 &" portion of the command is to run the command in the background and sends all log messages to capture.log
 
 # Modifying Things
-## Moloch
+## Arkime
+**Notes:**
+1. Arkime will collect traffic from your interface unless you change the value in moloch/capture.txt. It looks for 'TRUE' without the quotes. If it's not there it will not capture off the wire, but the files must exist or it will error.
+2. Arkime can reinitialize the data (clear the elastic data) by simply placing a '0' in init.txt. After it initializes it places a '1' in the file to skip this the next run.
+
 **WISE Tags** - https://arkime.com/wise
 
 To add more custom WISE tags add the file to moloch/tags then add it to moloch/wise/wiseService.ini
