@@ -5,12 +5,13 @@
     2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
 2. **cd network-home-training**
 3. chmod the raw pcap directory: **chmod 777 moloch/raw**
-3. If needed, **sudo dnf install docker-ce docker-compose -y**
-4. Add your user to docker group: **sudo usermod -aG docker $USER**
-5. Login to the new group: **newgrp docker**
-6. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
-7. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
-8. **docker-compose up -d**
+4. If needed, **sudo dnf install docker-ce docker-compose -y**
+5. Start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
+6. Add your user to docker group: **sudo usermod -aG docker $USER**
+7. Login to the new group: **newgrp docker**
+8. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
+9. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
+10. **docker-compose up -d**
 
 # **Fedora 33 MIP Image Instructions:**
 ## Install Docker
@@ -18,7 +19,7 @@ https://docs.docker.com/engine/install/fedora/
 1. **sudo dnf -y install dnf-plugins-core**
 2. **sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo**
 3. **sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-compose**
-4. start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
+4. Start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
 5. Add your user to docker group: **sudo usermod -aG docker $USER**
 6. Login to the new group: **newgrp docker**
 
