@@ -4,14 +4,13 @@
     1. If git is needed: **sudo dnf install git -y**
     2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
 2. **cd network-home-training**
-3. chmod the raw pcap directory: **chmod 777 moloch/raw**
-4. If needed, **sudo dnf install docker-ce docker-compose -y**
-5. Start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
-6. Add your user to docker group: **sudo usermod -aG docker $USER**
-7. Login to the new group: **newgrp docker**
-8. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
-9. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
-10. **docker-compose up -d**
+3. If needed, **sudo dnf install docker-ce docker-compose -y**
+4. Start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
+5. Add your user to docker group: **sudo usermod -aG docker $USER**
+6. Login to the new group: **newgrp docker**
+7. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
+8. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
+9. **docker-compose up -d**
 
 # **Fedora 33 MIP Image Instructions:**
 ## Install Docker
@@ -25,7 +24,7 @@ https://docs.docker.com/engine/install/fedora/
 
 ## Run
 1. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
-2. Chmod the directory elastic writes node data to: **chmod 777 elastic/elastic-data/nodes**
+2. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
 3. **docker-compose up -d**
 
 # **Running From Your Personal Computer**
