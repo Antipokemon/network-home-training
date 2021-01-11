@@ -30,7 +30,7 @@ https://docs.docker.com/engine/install/fedora/
 # **Running From Your Personal Computer**
 Since this was designed around the MIP, you will need to change the interface the containers are using.
 ## Moloch:
-1. **vim moloch/etc/config.ini**
+1. **vim moloch/config/config.ini**
     1. Change line 60 to your interface
 
 ## Suricata:
