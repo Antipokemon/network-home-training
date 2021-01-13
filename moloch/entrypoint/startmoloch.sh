@@ -26,7 +26,7 @@ if (($capture==TRUE))
 then
   #Start Capture service
   echo "Starting moloch-capture."
-  /bin/bash -c "/data/moloch/bin/moloch-capture --debug -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
+  /bin/bash -c "/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 fi
 
 # Start Viewer service.
