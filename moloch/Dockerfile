@@ -1,21 +1,11 @@
-FROM centos:7
+FROM ubuntu:20.04
 
-    # Dependencies
-RUN yum -y install libpng gcc-c++ bzip2 cronie vim python3 python3-pip && pip3 install xq && \
-    # Find lastest version of moloch
-    export VERSION=$(curl https://s3.amazonaws.com/files.molo.ch/ | xq . | grep Key | awk -F \<Key\> '{print $2}' | awk -F \</Key\> '{print $1}' | grep -v nightly | grep builds/centos-7/moloch | tail -1) && \
-    # Install moloch
-    yum -y install https://s3.amazonaws.com/files.molo.ch/$VERSION && \
-    ln -s /data/moloch/bin/node /usr/bin/node && \
-    cd /data/moloch/viewer && \
-    /data/moloch/bin/npm install fs-ext && \
-    /data/moloch/bin/npm update && \
-    /data/moloch/bin/npm rebuild && \
-    # Remove gcc-c++ so nothing else can be built in the container
-    yum -y autoremove gcc-c++ && \
-    yum -y autoremove && \
-    yum clean all && \
-    rm -rf /var/cache/yum && \
+RUN apt update -y && \
+    apt install -y gcc vim python3 python3-pip curl && pip3 install xq && \
+    export VERSION=$(curl https://s3.amazonaws.com/files.molo.ch/ | xq . | grep Key | awk -F \<Key\> '{print $2}' | awk -F \</Key\> '{print $1}' | grep -v nightly | grep builds/ubuntu-20.04 | tail -1 | awk -F '/' '{print $3}') && \
+    curl -O https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-20.04/$VERSION && \
+    apt install -y ./$VERSION && \
+    rm -f $VERSION && \
     # Pull maxmind Geo info for countries
     curl -L -o /tmp/GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=GDqrbhx8P5vE&suffix=tar.gz" && \
     # Pull maxmind Geo info for ASNs
@@ -30,7 +20,6 @@ RUN yum -y install libpng gcc-c++ bzip2 cronie vim python3 python3-pip && pip3 i
     # Create tags folder
     mkdir /data/moloch/tags/
 
-# Put maxmind databases in their proper locations
 RUN tar -ztf /tmp/GeoLite2-Country.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-Country.tar.gz X >> /data/moloch/etc/GeoLite2-Country.mmdb && \
     tar -ztf /tmp/GeoLite2-ASN.tar.gz | grep mmdb | xargs -I X tar -Ozxf /tmp/GeoLite2-ASN.tar.gz X >> /data/moloch/etc/GeoLite2-ASN.mmdb && \
     rm -rf /tmp/GeoLite2-*
