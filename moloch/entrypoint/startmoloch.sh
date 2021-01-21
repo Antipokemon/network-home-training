@@ -1,13 +1,10 @@
 #!/bin/bash
 
-init=$(cat /init.txt)
-capture=$(cat /capture.txt)
-
 # wait for Elasticsearch
 echo "Giving Elasticsearch time to start..."
 sleep 20
 
-if (($init==0))
+if (($INIT=TRUE))
 then
   # Initialize Elasticsearch for Arkime data.
   echo "Initializing elasticsearch database."
@@ -22,9 +19,9 @@ echo "Starting WISE tagger."
 /bin/bash -c 'cd /data/moloch/wiseService; /data/moloch/bin/node wiseService.js &'
 sleep 5
 
-if (($capture==TRUE))
+if (($CAPTURE==TRUE))
 then
-  #Start Capture service
+  # Start Capture service
   echo "Starting moloch-capture."
   /bin/bash -c "/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 fi
