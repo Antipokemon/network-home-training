@@ -83,8 +83,8 @@ services:
       - NET_ADMIN # Allows interacting with network interface. ie - promiscuous mode.
       - SYS_NICE # Allows the container to raise process nice values, set real-time scheduling policies, set CPU affinity, and other operations.
     environment:
-      - CAPTURE=TRUE # Start Arkime-capture to pull off the wire and store as pcap.
       - INIT=TRUE # Initialize Arkime db as start? Needs to be done on first startup regardless.
+      - CAPTURE=TRUE # Start Arkime-capture to pull off the wire and store as pcap.
 
 
   # This section is for starting kibana
