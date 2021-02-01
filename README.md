@@ -1,4 +1,4 @@
-# **Instructions**
+# **MIP Image Instructions**
 **Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
 1. Go to directory you want to store your docker data in:
     1. If git is needed: **sudo dnf install git -y**
@@ -11,6 +11,16 @@
 7. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
 8. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
 9. **docker-compose up -d**
+
+## **View Running Services**
+1. **Arkime** - localhost:8005
+    1. User: Admin
+    2. Password: password
+2. **Kibana** - localhost:5601  
+    1. You will likely need to create an index pattern.
+    2. Name it sessions2-*
+    3. Time field - timestamp
+3. **Elastic** - localhost:9200
 
 # **Fedora 33 MIP Image Instructions:**
 ## Install Docker
@@ -27,6 +37,16 @@ https://docs.docker.com/engine/install/fedora/
 2. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
 3. **docker-compose up -d**
 
+## **View Running Services**
+1. **Arkime** - localhost:8005
+    1. User: Admin
+    2. Password: password
+2. **Kibana** - localhost:5601  
+    1. You will likely need to create an index pattern.
+    2. Name it sessions2-*
+    3. Time field - timestamp
+3. **Elastic** - localhost:9200
+
 # **Running From Your Personal Computer**
 Since this was designed around the MIP, you will need to change the interface the containers are using.
 ## Moloch:
@@ -37,7 +57,7 @@ Since this was designed around the MIP, you will need to change the interface th
 1. **vim suricata/etc/suricata.yaml/suricata.yaml**
     1. change lines 584, 674, 1644, 1684 to your interface
 
-# **View Running Services**
+## **View Running Services**
 1. **Arkime** - localhost:8005
     1. User: Admin
     2. Password: password
