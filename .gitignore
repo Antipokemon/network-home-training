@@ -2,11 +2,11 @@
 /elastic/moloch-data/nodes/0
 
 # Ignore moloch pcap and logs
-/moloch/logs/viewer.log
-/moloch/logs/capture.log
-/moloch/raw/*.pcap
-/moloch/pcap/*.pcap
-/moloch/pcap/*.pcapng
+/arkime/logs/viewer.log
+/arkime/logs/capture.log
+/arkime/raw/*.pcap
+/arkime/pcap/*.pcap
+/arkime/pcap/*.pcapng
 
 # Ignore suricata logs
 /suricata/logs/eve.json
