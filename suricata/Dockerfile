@@ -3,25 +3,30 @@
 FROM ubuntu:20.04
 
 ENV TZ=Etc/UTC
+ENV VERSION=6.0.4
+
 ARG DEBIAN_FRONTEND=noninteractive
     # Dependencies
-RUN apt update && apt install -y libpcre3 libpcre3-dbg libpcre3-dev build-essential \
+RUN apt update && apt install -y libpcre3 libpcre3-dbg libpcre3-dev build-essential python3-distutils \
     libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev pkg-config zlib1g zlib1g-dev liblz4-dev \
     libcap-ng-dev libcap-ng0 make libmagic-dev curl libjansson-dev libluajit-5.1-dev \
     libnss3-dev libgeoip-dev liblua5.1-dev libhiredis-dev libevent-dev libmaxminddb-dev \
-    python-yaml rustc cargo && cargo install --force --debug --version 0.14.1 cbindgen && \
+    python-yaml rustc cargo && cargo install --force --debug --version 0.14.1 cbindgen
+
     # Pull and install suricata
-    curl -o /opt/suricata.tar.gz https://www.openinfosecfoundation.org/download/suricata-6.0.0.tar.gz &&\
-    tar -zxf /opt/suricata.tar.gz && rm -f /opt/suricata.tar.gz && \
-    mv suricata* /opt/suricata && cd /opt/suricata && \
+RUN curl -o /opt/suricata.tar.gz https://www.openinfosecfoundation.org/download/suricata-$VERSION.tar.gz &&\
+    cd /opt && tar -zxf /opt/suricata.tar.gz && rm -f /opt/suricata.tar.gz && \
+    mkdir /opt/suricata && mv suricata-$VERSION/* /opt/suricata && rm -rf suricata-$VERSION
+
     # configure suricata
-    ./configure --prefix=/usr --sysconfdir=/etc \
+RUN cd /opt/suricata && ./configure --prefix=/usr --sysconfdir=/etc \
     --localstatedir=/var --enable-nfqueue --enable-geopip \
     --enable-rust --enable-python --enable-libmagic --enable-luajit \
     --enable-geoip --enable-hiredis && make && make install && ldconfig && \
-    make install-full && \
+    make install-full
+
     # cleanup
-    rm -f /opt/suricata.tar.gz &&\
+RUN rm -f /opt/suricata.tar.gz &&\
     find /var/log -type f -delete && rm -rf /opt/suricata 
 
 RUN apt -y install logrotate && mv /etc/cron.daily/logrotate /etc/cron.hourly/logrotate

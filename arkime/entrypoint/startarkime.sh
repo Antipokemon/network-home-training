@@ -1,16 +1,19 @@
 #!/bin/bash
 
+cp /data/moloch/etc/config.ini /data/moloch/etc/config.ini.new
+sed -i "s/interface=.*$/interface=$INTERFACE/g" /data/moloch/etc/config.ini.new
+cp -f /data/moloch/etc/config.ini.new /data/moloch/etc/config.ini
+
 # wait for Elasticsearch
 echo "Giving Elasticsearch time to start..."
 sleep 20
 
-if (($INIT=TRUE))
+if (($INIT==TRUE))
 then
   # Initialize Elasticsearch for Arkime data.
   echo "Initializing elasticsearch database."
   echo INIT | /data/moloch/db/db.pl http://localhost:9200 init
   /data/moloch/bin/moloch_add_user.sh admin "Admin User" password --admin
-  echo "1" > /init.txt
 fi
 
 # Start WISE service.
@@ -22,11 +25,11 @@ sleep 5
 if (($CAPTURE==TRUE))
 then
   # Start Capture service
-  echo "Starting moloch-capture."
+  echo "Starting arkime-capture."
   /bin/bash -c "/data/moloch/bin/moloch-capture -c /data/moloch/etc/config.ini --host $HOSTNAME >> /data/moloch/logs/capture.log 2>&1 &"
 fi
 
 # Start Viewer service.
-echo "Starting moloch-viewer."
+echo "Starting arkime-viewer."
 cd /data/moloch/viewer
 /bin/bash -c "/data/moloch/bin/node viewer.js -c /data/moloch/etc/config.ini >> /data/moloch/logs/viewer.log 2>&1"

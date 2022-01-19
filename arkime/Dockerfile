@@ -1,13 +1,16 @@
 FROM ubuntu:20.04
 
 RUN apt update -y && \
-    apt install -y gcc vim python3 python3-pip curl && pip3 install xq && \
-    export VERSION=$(curl https://s3.amazonaws.com/files.molo.ch/ | xq . | grep Key | awk -F \<Key\> '{print $2}' | awk -F \</Key\> '{print $1}' | grep -v nightly | grep builds/ubuntu-20.04 | tail -1 | awk -F '/' '{print $3}') && \
+    apt install -y gcc vim python3 python3-pip curl jq && pip3 install yq
+
+RUN export VERSION=$(curl https://s3.amazonaws.com/files.molo.ch/ | xq . | grep Key | awk -F '"' '{print $4}' | \
+    grep builds/ubuntu-20.04 | tail -1 | awk -F '/' '{print $3}') && \
     curl -O https://s3.amazonaws.com/files.molo.ch/builds/ubuntu-20.04/$VERSION && \
     apt install -y ./$VERSION && \
-    rm -f $VERSION && \
+    rm -f $VERSION
+
     # Pull maxmind Geo info for countries
-    curl -L -o /tmp/GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=GDqrbhx8P5vE&suffix=tar.gz" && \
+RUN curl -L -o /tmp/GeoLite2-Country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=GDqrbhx8P5vE&suffix=tar.gz" && \
     # Pull maxmind Geo info for ASNs
     curl -L -o /tmp/GeoLite2-ASN.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=GDqrbhx8P5vE&suffix=tar.gz" && \
     curl -L -o /data/moloch/etc/ipv4-address-space.csv "https://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.csv" && \
@@ -30,18 +33,18 @@ COPY lua/smb.lua /data/moloch/lua/smb.lua
 COPY lua/entropy.lua /data/moloch/lua/entropy.lua
 
 # Copy wise dependencies
-COPY wise/source.majestic.js /data/moloch/wiseService/source.majestic.js
+# COPY wise/source.majestic.js /data/moloch/wiseService/source.majestic.js
 COPY wise/wiseService.ini /data/moloch/etc/wiseService.ini
 
-# Copy moloch's config file
+# Copy arkime's config file
 COPY config/config.ini /data/moloch/etc/config.ini
 
-# Copy start script to /data/startmoloch.sh
-COPY entrypoint/startmoloch.sh /data/startmoloch.sh
-RUN chmod +x /data/startmoloch.sh
+# Copy start script to /data/startarkime.sh
+COPY entrypoint/startarkime.sh /data/startarkime.sh
+RUN chmod +x /data/startarkime.sh
 
 WORKDIR /data/moloch/viewer
 CMD /bin/bash
 
 # Runs this script upon start of container
-ENTRYPOINT ["/data/startmoloch.sh"]
+ENTRYPOINT ["/data/startarkime.sh"]

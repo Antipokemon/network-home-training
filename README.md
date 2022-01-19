@@ -1,28 +1,12 @@
-# **MIP Image Instructions**
-**Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
-1. Go to directory you want to store your docker data in:
-    1. If git is needed: **sudo dnf install git -y**
-    2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
-2. **cd network-home-training**
-3. If needed, **sudo dnf install docker-ce docker-compose -y**
-4. Start and enable docker service: **sudo systemctl start docker && sudo systemctl enable docker**
-5. Add your user to docker group: **sudo usermod -aG docker $USER**
-6. Login to the new group: **newgrp docker**
-7. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
-8. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
-9. **docker-compose up -d**
+# **Update 19 Jan 2022**
+1. Updated file paths for newer Arkime structure.
+2. Updated suricata to newest version and added version variable in .env
+3. Suricata Dockerfile - Added required dependecy for building suricata.
+4. Arkime Dockerfile - Added more RUN fields to cache for easier error checking.
 
-## **View Running Services**
-1. **Arkime** - localhost:8005
-    1. User: Admin
-    2. Password: password
-2. **Kibana** - localhost:5601  
-    1. You will likely need to create an index pattern.
-    2. Name it sessions2-*
-    3. Time field - timestamp
-3. **Elastic** - localhost:9200
+# **Instructions**
+**Note:** As the MIP is built using Fedora, these instructions use commands for Fedora. For Ubuntu/Debian, adjust commands as necessary.
 
-# **Fedora 33 MIP Image Instructions:**
 ## Install Docker
 https://docs.docker.com/engine/install/fedora/
 1. **sudo dnf -y install dnf-plugins-core**
@@ -32,39 +16,32 @@ https://docs.docker.com/engine/install/fedora/
 5. Add your user to docker group: **sudo usermod -aG docker $USER**
 6. Login to the new group: **newgrp docker**
 
+## Clone git repository
+**Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
+1. Go to directory you want to store your docker data in:
+    1. If git is needed: **sudo dnf install git -y**
+    2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
+2. **cd network-home-training**
+
 ## Run
-1. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
-2. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
-3. **docker-compose up -d**
+1. You will need to modify the INTERFACE variable in the .env file of the root folder. (Same folder as the docker-compose.yml)
+    1. Find the interface of your computer and replace eno1 of INTERFACE=eno1 with your interface name. Ex: INTERFACE=enp6s0.
+2. Chmod the directory moloch writes pcap to: **chmod 777 moloch/raw**
+3. Chmod the directory elastic writes node data to: **chmod 777 elastic/moloch-data/nodes**
+4. **docker-compose up -d**
 
 ## **View Running Services**
 1. **Arkime** - localhost:8005
-    1. User: Admin
+    1. User: admin
     2. Password: password
 2. **Kibana** - localhost:5601  
-    1. You will likely need to create an index pattern.
-    2. Name it sessions2-*
-    3. Time field - timestamp
-3. **Elastic** - localhost:9200
-
-# **Running From Your Personal Computer**
-Since this was designed around the MIP, you will need to change the interface the containers are using.
-## Moloch:
-1. **vim moloch/config/config.ini**
-    1. Change line 60 to your interface
-
-## Suricata:
-1. **vim suricata/etc/suricata.yaml/suricata.yaml**
-    1. change lines 584, 674, 1644, 1684 to your interface
-
-## **View Running Services**
-1. **Arkime** - localhost:8005
-    1. User: Admin
-    2. Password: password
-2. **Kibana** - localhost:5601  
-    1. You will likely need to create an index pattern.
-    2. Name it sessions2-*
-    3. Time field - timestamp
+    1. You will likely need to create index patterns on first run.
+        1. Hamburger Icon > Stack Management > Index Patterns > Create index pattern.
+        2. In the index pattern name field you will need to create 2 index names.
+            1. 'sessions2-'
+            2. 'filebeat-'
+        3. Kibana will append a * to the end. Leave it there.
+        4. When asked for Time field, select @timestamp for both.
 3. **Elastic** - localhost:9200
 
 # **Running pcap through Arkime (Moloch)**
@@ -128,8 +105,9 @@ Application Options:
 # Modifying Things
 ## Arkime
 **Notes:**
-1. Arkime will collect traffic from your interface unless you change the value in moloch/capture.txt. It looks for 'TRUE' without the quotes. If it's not there it will not capture off the wire, but the files must exist or it will error.
-2. Arkime can reinitialize the data (clear the elastic data) by simply placing a '0' in init.txt. After it initializes it places a '1' in the file to skip this the next run.
+1. Arkime will collect traffic from your interface unless you change the value in the .env file. It looks for 'TRUE' without the quotes. If it's not there it will not capture off the wire, but the files must exist or it will error.
+2. Arkime has been set to reinitialize the database on each run. To change this, modify the .env file and change TRUE for CAPTURE=TRUE to another value. Ex: CAPTURE=FALSE, CAPTURE=OFF.
+    1. Any value here will work as it is only looks for a TRUE value to reinitialize the database.
 
 **WISE Tags** - https://arkime.com/wise
 
@@ -193,3 +171,8 @@ Lastly, Mr. Dietrich created a suricata training. It may help to seek that out.
     2. Shard description - https://www.elastic.co/guide/en/elasticsearch/guide/2.x/_add_an_index.html
     3. Index description - https://www.elastic.co/blog/what-is-an-elasticsearch-index
 8. Suricata documentation - https://suricata.readthedocs.io/en/suricata-6.0.0/
+
+# **Update 27 Mar 2021**
+1. Zeek and Filebeat have been added. Zeek will run against live traffic and logs will show in kibana.
+2. Added .env file to simplify interface to use.
+3. Cleaned up README.md to be more clear and less of a mess.

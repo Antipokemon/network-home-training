@@ -5,7 +5,7 @@ services:
   elastic:
     # Calls the image:version of elasticsearch to use.
     ## Since no build variable exists, pulls from docker hub if image not present.
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VER}
     # What to name the running container
     container_name: elastic
     # Used to connect container to the host network
@@ -21,12 +21,6 @@ services:
         # Hard limit is the ceiling for the resource value for unprivileged processes
         ## which can raise its soft limit only to this value.
         hard: -1
-    # Ports open host:container to interact with the container
-    ports:
-      # elasticsearch API port
-      - 9200:9200
-      # communication for nodes
-      - 9300:9300
     environment:
       # Sets elastic to run as only a single node. Only change this if you "think" you know what you are doing.
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html#single-node-discovery
@@ -36,20 +30,16 @@ services:
       # Mounts host:container volume to allow access/persistence to files running in the container.
       - ./elastic/moloch-data:/usr/share/elasticsearch/data:Z # Node data for elasticsearch persistence.
 
-  # This section is for starting moloch
-  moloch:
-    # Moloch image to use.
-    image: moloch:latest
+  # This section is for starting arkime
+  arkime:
+    # Arkime image to use.
+    image: arkime:latest
     # If the image doesn't exist build from this location. "." is the local directory
-    build: ./moloch
+    build: ./arkime
     # What to name the running container
-    container_name: moloch
+    container_name: arkime
     # Used to connect container to the host for collecting off the wire
     network_mode: host
-    # Ports open host:container to interact with the container
-    ports:
-      # Ports open host:container to interact with the container
-      - 8005:8005
     # ulimit is the number of open file descriptors per process.
     ulimits:
       # memlock option is used to set the maximum amount of locked-in-memory address space as given in kilobytes.
@@ -59,21 +49,20 @@ services:
         # Hard limit is the ceiling for the resource value for unprivilged processess
         ## which can raise its soft limit only to this value.
         hard: -1
-    # Waits to start moloch until elasticsearch is running
+    # Waits to start arkime until elasticsearch is running
     depends_on:
       - elastic
     # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
-      - ./moloch/logs:/data/moloch/logs/:Z # log files related to moloch
-      - ./moloch/pcap:/data/pcap/:ro # pcap folder for ingesting new pcap
-      - ./moloch/raw:/data/moloch/raw/:rw # pcap folder for processed pcap - stored as sessions2 data
-      - ./moloch/config/config.ini:/data/moloch/etc/config.ini:Z # Config used for moloch settings
-      - ./init.txt:/init.txt:Z # Used to determine if elastic database should be initialized. If excluded will always start with clean moloch.
-      - ./moloch/capture.txt:/capture.txt:Z # Used to determine whether capture should start listening off the wire.
-      - ./suricata/logs:/data/moloch/etc/suricata:z # Used to share alerts from suricata with moloch.
-      - ./moloch/tags:/data/moloch/tags:Z # Used to store WISE tag files.
-      - ./moloch/wise/wiseService.ini:/data/moloch/etc/wiseService.ini # Used to change the wise config file.
+      - ./arkime/logs:/data/moloch/logs/:Z # log files related to arkime
+      - ./arkime/pcap:/data/pcap/:ro # pcap folder for ingesting new pcap
+      - ./arkime/raw:/data/moloch/raw/:rw # pcap folder for processed pcap - stored as sessions2 data
+      - ./arkime/config/config.ini:/data/moloch/etc/config.ini:rw # Config used for arkime settings
+      - ./suricata/logs:/data/moloch/etc/suricata:z # Used to share alerts from suricata with arkime.
+      - ./arkime/tags:/data/moloch/tags:Z # Used to store WISE tag files.
+      - ./arkime/wise/wiseService.ini:/data/moloch/etc/wiseService.ini # Used to change the wise config file.
+      - ./arkime/entrypoint/startarkime.sh:/data/startarkime.sh
       ## 1 = leave alone, init if anything else.
     # Add container capabilities - These may not be needed, but if use cases expand they may be.
     ## They are used on our kit's config and have been carried over.
@@ -83,23 +72,20 @@ services:
       - NET_ADMIN # Allows interacting with network interface. ie - promiscuous mode.
       - SYS_NICE # Allows the container to raise process nice values, set real-time scheduling policies, set CPU affinity, and other operations.
     environment:
-      - INIT=TRUE # Initialize Arkime db as start? Needs to be done on first startup regardless.
-      - CAPTURE=TRUE # Start Arkime-capture to pull off the wire and store as pcap.
+      - INIT=${INIT} # Initialize Arkime db as start? Needs to be done on first startup regardless.
+      - CAPTURE=${CAPTURE} # Start Arkime-capture to pull off the wire and store as pcap.
+      - INTERFACE=${INTERFACE}
 
 
   # This section is for starting kibana
   kibana:
     # Calls the image:version of kibana to use. Make sure the version matches elasticsearch.
     ## Since no build variable exists, pulls from docker hub if image not present.
-    image: docker.elastic.co/kibana/kibana:7.10.0
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VER}
     # What to name the running container
     container_name: kibana
     # Used to connect container to the host network
     network_mode: host
-    # Ports open host:container to interact with the container
-    ports:
-      # Ports open host:container to interact with the container
-      - 5601:5601
     # Shares between the host system and the container for "ease of editing"/"persistence of data"
     volumes:
       # Mounts host:container volume to allow access/persistence to files running in the container
@@ -109,7 +95,7 @@ services:
   suricata:
     # Calls the image:version of suricata to use.
     image: suricata:6.0.0
-     # If the image doesn't exist build from this location. "." is the local directory
+    # If the image doesn't exist build from this location. "." is the local directory
     build: ./suricata
     # What to name the running container
     container_name: suricata
@@ -124,3 +110,54 @@ services:
       - ./suricata/rules:/etc/suricata/rules:z # Rules files.
       - ./suricata/etc/suricata.yaml/suricata.yaml:/etc/suricata/suricata.yaml:Z # Suricata.yaml to edit config
       - ./suricata/logs:/var/log/suricata:z # suricata logs for alerts and debug
+    environment:
+      - VERSION=${SURICATA_VERSION}
+    command: suricata --af-packet=${INTERFACE}
+
+  zeek:
+    # Calls the image:version of zeek to use.
+    image: zeek:latest
+    # If the image doesn't exist build from this location. "." is the local directory
+    build: ./zeek
+    # What to name the running container
+    container_name: zeek
+    # Used to connect container to the host for collecting off the wire
+    network_mode: host
+    # ulimit is the number of open file descriptors per process.
+    ulimits:
+      # memlock option is used to set the maximum amount of locked-in-memory address space as given in kilobytes.
+      memlock:
+        # Soft limit is the limit enforced by kernel.
+        soft: -1
+        # Hard limit is the ceiling for the resource value for unprivileged processes
+        ## which can raise its soft limit only to this value.
+        hard: -1
+      # Add container capabilities - These may not be needed, but if use cases expand they may be.
+    cap_add:
+      - NET_RAW # Allow use of RAW and PACKET sockets.
+      # Shares between the host system and the container for "ease of editing"/"persistence of data"
+    volumes:
+      - ./zeek/logs:/zeek # zeek logs
+      - ./zeek/pcap:/pcap # pcap location for zeek access
+      - ./zeek/config:/opt/zeek/etc/ # zeek config file locations. Likely not needed.
+    command: /opt/zeek/bin/zeek -i ${INTERFACE} LogAscii::use_json=T
+  
+  # This section is for starting zeek
+  filebeat:
+    # Calls the image:version of zeek to use.
+    image: docker.elastic.co/beats/filebeat:${ELASTIC_VER}
+    # What to name the running container
+    container_name: filebeat
+    # Waits to start arkime until elasticsearch is running
+    depends_on:
+      - elastic
+      - zeek
+    # Used to connect container to the host network
+    network_mode: host
+    # Shares between the host system and the container for "ease of editing"/"persistence of data"
+    volumes:
+      # Mounts host:container volume to allow access/persistence to files running in the container
+      - ./zeek/logs:/data/zeek # zeek log output directory for parsing by filebeat.
+      - ./filebeat/config/zeek.yml:/usr/share/filebeat/modules.d/zeek.yml:ro # config file setting zeek log location.
+      - ./filebeat/config/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro # filebeat config file. Mostly for adv users.
+    command: filebeat -e -strict.perms=false

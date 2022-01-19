@@ -1,0 +1,9 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+output.elasticsearch:
+  hosts: '${ELASTICSEARCH_HOSTS:localhost:9200}'
+  username: '${ELASTICSEARCH_USERNAME:admin}'
+  password: '${ELASTICSEARCH_PASSWORD:password}'
