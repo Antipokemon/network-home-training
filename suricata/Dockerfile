@@ -16,7 +16,7 @@ RUN apt update && apt install -y pip libpcre3 libpcre3-dbg libpcre3-dev build-es
     # Pull and install suricata
 RUN curl -o /opt/suricata.tar.gz https://www.openinfosecfoundation.org/download/suricata-$VERSION.tar.gz &&\
     cd /opt && tar -zxf /opt/suricata.tar.gz && rm -f /opt/suricata.tar.gz && \
-    mkdir /opt/suricata && mv suricata-$VERSION/* /opt/suricata && rm -rf suricata-$VERSION && \
+    mkdir /opt/suricata && mv suricata-$VERSION/* /opt/suricata && rm -rf suricata-$VERSION
     
     # Install suricata-update
 RUN pip install pyyaml && cd /opt/suricata/suricata-update && python3 setup.py install
