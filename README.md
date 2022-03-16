@@ -1,9 +1,3 @@
-# **Update 19 Jan 2022**
-1. Updated file paths for newer Arkime structure.
-2. Updated suricata to newest version and added version variable in .env
-3. Suricata Dockerfile - Added required dependecy for building suricata.
-4. Arkime Dockerfile - Added more RUN fields to cache for easier error checking.
-
 # **Instructions**
 **Note:** As the MIP is built using Fedora, these instructions use commands for Fedora. For Ubuntu/Debian, adjust commands as necessary.
 
