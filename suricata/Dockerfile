@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
     # Dependencies
 RUN apt update && apt install -y pip libpcre3 libpcre3-dbg libpcre3-dev build-essential python3-distutils \
     libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev pkg-config zlib1g zlib1g-dev liblz4-dev \
-    libcap-ng-dev libcap-ng0 make libmagic-dev curl libjansson-dev libluajit-5.1-dev pip \
+    libcap-ng-dev libcap-ng0 make libmagic-dev curl libjansson-dev libluajit-5.1-dev \
     libnss3-dev libgeoip-dev liblua5.1-dev libhiredis-dev libevent-dev libmaxminddb-dev \
     python-yaml rustc cargo && cargo install --force --debug --version 0.14.1 cbindgen
 
