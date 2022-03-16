@@ -165,8 +165,3 @@ Lastly, Mr. Dietrich created a suricata training. It may help to seek that out.
     2. Shard description - https://www.elastic.co/guide/en/elasticsearch/guide/2.x/_add_an_index.html
     3. Index description - https://www.elastic.co/blog/what-is-an-elasticsearch-index
 8. Suricata documentation - https://suricata.readthedocs.io/en/suricata-6.0.0/
-
-# **Update 27 Mar 2021**
-1. Zeek and Filebeat have been added. Zeek will run against live traffic and logs will show in kibana.
-2. Added .env file to simplify interface to use.
-3. Cleaned up README.md to be more clear and less of a mess.
