@@ -94,7 +94,7 @@ services:
   # This section is for starting suricata
   suricata:
     # Calls the image:version of suricata to use.
-    image: suricata:6.0.0
+    image: suricata:${SURICATA_VERSION}
     # If the image doesn't exist build from this location. "." is the local directory
     build: ./suricata
     # What to name the running container
