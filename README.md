@@ -14,7 +14,7 @@ https://docs.docker.com/engine/install/fedora/
 **Note**: The intent for this is to be run on your MIP. These commands should be run as the normal assessor user. If you are running it on your home computer, you may need to adjust the commands for the OS you are running.
 1. Go to directory you want to store your docker data in:
     1. If git is needed: **sudo dnf install git -y**
-    2. **git clone https://bitbucket.di2e.net/scm/cyh836/network-home-training.git**
+    2. **git clone https://github.com/Antipokemon/network-home-training.git**
 2. **cd network-home-training**
 
 ## Run
